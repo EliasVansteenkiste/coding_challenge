@@ -8,6 +8,7 @@ import os
 
 import app
 import pathfinder
+import utils_plots
 
 
 def parse_contour_file(filename):
@@ -69,10 +70,22 @@ def get_dicom_id(icontour_path, oid2pid = app.read_oid2pid(pathfinder.LINK_PATH)
     dicom_id = oid2pid[contour_id]
     return dicom_id
 
+def generate_border_plots():
+    for idx, icp in enumerate(get_list_available_icontours()):
+        if idx == 1000:
+            break
+        slice, pixel_spacing = app.read_dicom_slice(get_dicom_id(icp), get_slice_id(icp))
+        contour_lst = parse_contour_file(icp)
+        mask = poly_to_mask(contour_lst,slice.shape[0],slice.shape[1])
+        outfile = 'plots/'+get_contour_id(icp)+'_'+get_dicom_id(icp)+'_'+str(get_slice_id(icp))+'.jpg'
+        print pixel_spacing, outfile
+        utils_plots.plot_border_on_slice(slice, mask, outfile)
+
 
 if __name__ == "__main__":
-    for idx, icp in enumerate(get_list_available_icontours()):
-        if idx == 100:
-            break
-        img, pixel_spacing = app.read_dicom_slice(get_dicom_id(icp), get_slice_id(icp))
-        print img.shape, pixel_spacing
+    generate_border_plots()
+
+
+
+
+
