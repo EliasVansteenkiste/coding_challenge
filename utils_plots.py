@@ -7,18 +7,8 @@ import numpy as np
 import matplotlib.animation as animation
 import skimage.morphology 
 
-import utils
-
 warnings.simplefilter('ignore')
 anim_running = True
-
-def show_img(img, img_dir='test.jpg'):
-    fig = plt.figure()
-    a = fig.add_subplot(1, 1, 1)
-    a = a.set_title(img_dir)
-    plt.imshow(img)
-    fig.savefig(img_dir, bbox_inches='tight')
-
 
 
 def plot_border_on_slice(slice, mask, outfile):

@@ -74,9 +74,10 @@ class DataGenerator(object):
                 break
 
 def _test_data_generator():
-    #testing data iterator 
+    #testing the data iterator 
 
-    p_transform = {'patch_size': (256, 256)}
+    # p_transform can be used to pass various info to the data iterator
+    p_transform = {'patch_size': (256, 256)} 
     rng = np.random.RandomState(42)
 
     def data_prep_fun(x):
