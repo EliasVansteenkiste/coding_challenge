@@ -1,3 +1,4 @@
+"""some functions specific to this application"""
 import csv
 
 import pathfinder

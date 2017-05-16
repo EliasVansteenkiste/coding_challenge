@@ -1,3 +1,4 @@
+"""Checks if all datapaths and files exist"""
 import json
 import utils
 import os

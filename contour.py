@@ -31,7 +31,6 @@ def parse_contour_file(filename):
 
     return coords_lst
 
-
 def poly_to_mask(polygon, width, height):
     """Convert polygon to mask
 

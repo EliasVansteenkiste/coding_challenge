@@ -1,3 +1,4 @@
+"""Source code for data iterators"""
 import numpy as np
 
 #project imports
