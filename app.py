@@ -12,7 +12,7 @@ import pathfinder
 
 def read_pid2oid(link_path):
     """
-    :param link_path: str, path to link CSV file contining patient ids and original ids
+    :param link_path: str, path to link CSV file containing patient ids and original ids
     :return: dict with patient ids as keys and the values are the original ids
     """
     pid2oid = {}
@@ -24,15 +24,22 @@ def read_pid2oid(link_path):
 
     return pid2oid
 
-def _test_read_pid2oid():
-    print read_pid2oid(pathfinder.LINK_PATH)
+def read_oid2pid(link_path):
+    """
+    :param link_path: str, path to link CSV file containing patient ids and original ids
+    :return: dict with original ids as keys and the values are the patient ids
+    """
+    oid2pid = {}
+
+    with open(link_path, 'rb') as csvfile:
+        reader = csv.DictReader(csvfile, delimiter=',')
+        for row in reader:
+            oid2pid[row['original_id']] = row['patient_id']
+
+    return oid2pid
 
 def parse_dicom_file(filename):
-    """Parse the given DICOM filename
 
-    :param filename: filepath to the DICOM file to parse
-    :return: dictionary with DICOM image data
-    """
 
     try:
         dcm = dicom.read_file(filename)
@@ -56,6 +63,12 @@ def parse_dicom_file(filename):
 
 
 def parse_dicom_file(path):
+    """Parse the given DICOM filename
+
+    :param path: filepath to the DICOM file to parse
+    :return dcm_image: DICOM image data
+    :return metadata: dictionary with metadata read from the dicom file
+    """
     try:
         d = dicom.read_file(path)
         metadata = {}
@@ -118,14 +131,25 @@ def get_patient_data(patient_data_path):
 
 
 
+def read_dicom_slice(dicom_id, slice_id):
+    slice_path = pathfinder.DICOMS_PATH + '/' + dicom_id + '/' + str(slice_id) + '.dcm'
+    data, metadata = parse_dicom_file(slice_path)
+    pixel_spacing = metadata['PixelSpacing']
+    return data, pixel_spacing
+
+
+
 def read_dicom_scan(patient_data_path):
     sid2data, sid2metadata = get_patient_data(patient_data_path)
     sid2position = {}
-    max_key = max([int(i) for i in list(sid2data.keys())])
+    sid2idx = {}
     time_series = []
     positions = []
     pixel_spacings = []
-    for start_sid in range(1, max_key+1, 20):
+    max_key = max([int(i) for i in list(sid2data.keys())])
+    start_sid_range = np.arange(1, max_key+1, 20)
+
+    for idx, start_sid in enumerate(start_sid_range):
         slice_positions = set()
         slice_shapes = set()
         slice_pixel_spacings = set()
@@ -133,6 +157,7 @@ def read_dicom_scan(patient_data_path):
         for i in range(20): #20 timesteps
             sid = start_sid + i
             sid = unicode(str(sid), "utf-8")
+            sid2idx[sid] = (i,idx)
             slice_positions.add(get_slice_position(sid2metadata[sid]))
             slice_shapes.add(sid2data[sid].shape)
             slice_pixel_spacings.add(tuple(sid2metadata[sid]['PixelSpacing']))
@@ -157,7 +182,7 @@ def read_dicom_scan(patient_data_path):
     assert len(s_pixel_spacings) == 1, "There are different x,y pixel spacings in the scan: %s" % s_pixel_spacings
     xy_pixelspacing = next(iter(s_pixel_spacings))
 
-    return whole_scan, (z_pixel_spacing[0], xy_pixelspacing[0], xy_pixelspacing[1])
+    return whole_scan, sid2idx, (z_pixel_spacing[0], xy_pixelspacing[0], xy_pixelspacing[1])
 
 
 def sort_slices_position(patient_data):
@@ -180,61 +205,6 @@ def get_slice_position(slice_metadata):
     return slice_pos
 
 
-def slice_location_finder(sid2metadata):
-    """
-    :param slicepath2metadata: dict with arbitrary keys, and metadata values
-    :return:
-    """
-
-    sid2midpix = {}
-    sid2position = {}
-
-    for sid in sid2metadata:
-        metadata = sid2metadata[sid]
-        image_orientation = metadata["ImageOrientationPatient"]
-        image_position = metadata["ImagePositionPatient"]
-        pixel_spacing = metadata["PixelSpacing"]
-        rows = metadata['Rows']
-        columns = metadata['Columns']
-
-        # calculate value of middle pixel
-        F = np.array(image_orientation).reshape((2, 3))
-        # reversed order, as per http://nipy.org/nibabel/dicom/dicom_orientation.html
-        i, j = columns / 2.0, rows / 2.0
-        im_pos = np.array([[i * pixel_spacing[0], j * pixel_spacing[1]]], dtype='float32')
-        pos = np.array(image_position).reshape((1, 3))
-        position = np.dot(im_pos, F) + pos
-        sid2midpix[sid] = position[0, :]
-
-    if len(sid2midpix) <= 1:
-        for sp, midpix in sid2midpix.iteritems():
-            sid2position[sp] = 0.
-    else:
-        # find the keys of the 2 points furthest away from each other
-        max_dist = -1.0
-        max_dist_keys = []
-        for sp1, midpix1 in sid2midpix.iteritems():
-            for sp2, midpix2 in sid2midpix.iteritems():
-                if sp1 == sp2:
-                    continue
-                distance = np.sqrt(np.sum((midpix1 - midpix2) ** 2))
-                if distance > max_dist:
-                    max_dist_keys = [sp1, sp2]
-                    max_dist = distance
-        # project the others on the line between these 2 points
-        # sort the keys, so the order is more or less the same as they were
-        # max_dist_keys.sort(key=lambda x: int(re.search(r'/sax_(\d+)\.pkl$', x).group(1)))
-        p_ref1 = sid2midpix[max_dist_keys[0]]
-        p_ref2 = sid2midpix[max_dist_keys[1]]
-        v1 = p_ref2 - p_ref1
-        v1 /= np.linalg.norm(v1)
-
-        for sp, midpix in sid2midpix.iteritems():
-            v2 = midpix - p_ref1
-            sid2position[sp] = np.inner(v1, v2)
-
-    return sid2position
-
 
 def get_patient_data_paths(data_dir):
     pids = sorted(os.listdir(data_dir))
@@ -249,8 +219,10 @@ def read_patient_annotations_luna(pid, directory):
 def _test_read_dicom_scan():
     pid2oid = read_pid2oid(pathfinder.LINK_PATH)
     for key in pid2oid:
-        img, pixel_spacings = read_dicom_scan(pathfinder.DICOMS_PATH+'/'+key)
+        img, sid2idx, pixel_spacings = read_dicom_scan(pathfinder.DICOMS_PATH+'/'+key)
         print key, img.shape, pixel_spacings
+
+    #TODO there are different pixel spacings so we will have to interpolate
 
 
 
