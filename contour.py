@@ -4,7 +4,9 @@ import dicom
 from dicom.errors import InvalidDicomError
 import numpy as np
 from PIL import Image, ImageDraw
+import skimage
 import os
+import cv
 
 #project imports
 import app
@@ -31,7 +33,50 @@ def parse_contour_file(filename):
 
     return coords_lst
 
-def poly_to_mask(polygon, width, height):
+def poly_to_mask_alt2(vertexlist, width, height):
+    """Convert polygon to mask
+
+    :param polygon: list of pairs of x, y coords [(x1, y1), (x2, y2), ...]
+     in units of pixels
+    :param width: scalar image width
+    :param height: scalar image height
+    :return: Boolean mask of shape (height, width)
+    """
+
+    img = Image.new('L', (width, height), color=0)   # The Zero is to Specify Background Color
+    draw = ImageDraw.Draw(img)
+
+    for vertex in range(len(vertexlist)):
+        startpoint = vertexlist[vertex]
+        try: endpoint = vertexlist[vertex+1]
+        except IndexError: endpoint = vertexlist[0] 
+        # The exception means We have reached the end and need to complete the polygon
+        draw.line((startpoint[0], startpoint[1], endpoint[0], endpoint[1]), fill=1)
+
+    mask = np.array(img).astype(bool)
+    print mask.shape
+    return mask
+
+
+def poly_to_mask(vertexlist, width, height):
+    """Convert polygon to mask
+
+    :param polygon: list of pairs of x, y coords [(x1, y1), (x2, y2), ...]
+     in units of pixels
+    :param width: scalar image width
+    :param height: scalar image height
+    :return: Boolean mask of shape (height, width)
+    """
+    vertex_row_coords, vertex_col_coords = zip(*vertexlist)
+    shape = (width, height)
+    fill_row_coords, fill_col_coords = skimage.draw.polygon(vertex_col_coords, vertex_row_coords, shape)
+    mask = np.zeros(shape, dtype=np.bool)
+    mask[fill_row_coords, fill_col_coords] = True
+    return mask
+
+
+
+def poly_to_mask_old(polygon, width, height):
     """Convert polygon to mask
 
     :param polygon: list of pairs of x, y coords [(x1, y1), (x2, y2), ...]
@@ -48,6 +93,10 @@ def poly_to_mask(polygon, width, height):
     return mask
 
 def get_list_available_icontours():
+    """Check all available i-contours
+
+    :return: a list of paths to all the i-contours
+    """
     icountours = []
     pid2oid = app.read_pid2oid(pathfinder.LINK_PATH)
     for key,value in pid2oid.iteritems():
@@ -69,6 +118,9 @@ def get_dicom_id(icontour_path, oid2pid = app.read_oid2pid(pathfinder.LINK_PATH)
     contour_id = icontour_path.split('/')[-3]
     dicom_id = oid2pid[contour_id]
     return dicom_id
+
+
+
 
 
 

@@ -35,6 +35,30 @@ def plot_border_on_slice(slice, mask, outfile):
     plt.close('all')
 
 
+def plot_polygone_on_mask(points, mask, outfile, resolution):
+    """
+    Plot the border of the mask on a plot of the slice and mask
+    the plot is not shown but saved to a file
+
+
+    :param points: a list of (x,y) points indicating the vertices of the polygone
+    :param mask: mask array (2D), should have the same shape as slice
+    :param outfile: filepath to which the plot will be saved to
+    """
+
+    f = plt.figure(figsize=(resolution, resolution))
+    f.add_subplot(1, 1, 1)
+    plt.imshow(mask, cmap=plt.cm.bone)
+
+    plt.scatter(*zip(*points), s=5)
+
+    # selem1 = skimage.morphology.disk(2)
+    # inner = skimage.morphology.binary_erosion(mask, selem1)
+    # border = np.logical_xor(inner, mask)
+    # plt.imshow(border, cmap=plt.cm.viridis, alpha=.3)
+
+    f.savefig(outfile, bbox_inches='tight')
+    plt.close('all')
 
 def plot_slice_mask(slice, mask, outfile, border=True):
     """
