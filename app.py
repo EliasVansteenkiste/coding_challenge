@@ -61,7 +61,6 @@ def parse_dicom_file(filename):
     except InvalidDicomError:
         return None
 
-
 def parse_dicom_file(path):
     """Parse the given DICOM filename
 
@@ -109,15 +108,6 @@ def parse_dicom_file(path):
     except InvalidDicomError:
         return None
 
-
-def extract_pid_dir(patient_data_path):
-    return patient_data_path.split('/')[-1]
-
-
-def extract_pid_filename(file_path, replace_str='.mhd'):
-    return os.path.basename(file_path).replace(replace_str, '').replace('.pkl', '')
-
-
 def get_patient_data(patient_data_path):
     slice_paths = os.listdir(patient_data_path)
     sid2data = {}
@@ -129,17 +119,14 @@ def get_patient_data(patient_data_path):
         sid2metadata[slice_id] = metadata
     return sid2data, sid2metadata
 
-
-
 def read_dicom_slice(dicom_id, slice_id):
     slice_path = pathfinder.DICOMS_PATH + '/' + dicom_id + '/' + str(slice_id) + '.dcm'
     data, metadata = parse_dicom_file(slice_path)
     pixel_spacing = metadata['PixelSpacing']
     return data, pixel_spacing
 
-
-
 def read_dicom_scan(patient_data_path):
+    "Reads the whole scan in of "
     sid2data, sid2metadata = get_patient_data(patient_data_path)
     sid2position = {}
     sid2idx = {}
@@ -184,15 +171,6 @@ def read_dicom_scan(patient_data_path):
 
     return whole_scan, sid2idx, (z_pixel_spacing[0], xy_pixelspacing[0], xy_pixelspacing[1])
 
-
-def sort_slices_position(patient_data):
-    return sorted(patient_data, key=lambda x: get_slice_position(x['metadata']))
-
-
-def sort_sids_by_position(sid2metadata):
-    return sorted(sid2metadata.keys(), key=lambda x: get_slice_position(sid2metadata[x]))
-
-
 def get_slice_position(slice_metadata):
     """
     https://www.kaggle.com/rmchamberlain/data-science-bowl-2017/dicom-to-3d-numpy-arrays
@@ -205,27 +183,12 @@ def get_slice_position(slice_metadata):
     return slice_pos
 
 
-
-def get_patient_data_paths(data_dir):
-    pids = sorted(os.listdir(data_dir))
-    return [data_dir + '/' + p for p in pids]
-
-def read_patient_annotations_luna(pid, directory):
-    return pickle.load(open(os.path.join(directory,pid+'.pkl'),"rb"))
-
-
-
-
 def _test_read_dicom_scan():
     pid2oid = read_pid2oid(pathfinder.LINK_PATH)
     for key in pid2oid:
         img, sid2idx, pixel_spacings = read_dicom_scan(pathfinder.DICOMS_PATH+'/'+key)
         print key, img.shape, pixel_spacings
-
-    #TODO there are different pixel spacings so we will have to interpolate
-
-
-
+    #TODO there are different pixel spacings so we will have to interpolate if we want to use it in a CNN
 
 
 
