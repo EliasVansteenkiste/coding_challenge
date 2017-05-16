@@ -1,5 +1,5 @@
 {
-  "CONTOURS_PATH": "/Users/Elias/sideprojects/coding_challenge_arterys/final_data/contourfiles",
-  "DICOMS_PATH": "/Users/Elias/sideprojects/coding_challenge_arterys/final_data/dicoms",
-  "LINK_PATH": "/Users/Elias/sideprojects/coding_challenge_arterys/final_data/link.csv"
+  "CONTOURS_PATH": "/home/eavsteen/coding_challenge/final_data/contourfiles",
+  "DICOMS_PATH": "/home/eavsteen/coding_challenge/final_data/dicoms",
+  "LINK_PATH": "/home/eavsteen/coding_challenge/final_data/link.csv"
 }
