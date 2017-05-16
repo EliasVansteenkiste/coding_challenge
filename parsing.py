@@ -27,34 +27,6 @@ def parse_contour_file(filename):
     return coords_lst
 
 
-def parse_dicom_file(filename):
-    """Parse the given DICOM filename
-
-    :param filename: filepath to the DICOM file to parse
-    :return: dictionary with DICOM image data
-    """
-
-    try:
-        dcm = dicom.read_file(filename)
-        dcm_image = dcm.pixel_array
-
-        try:
-            intercept = dcm.RescaleIntercept
-        except AttributeError:
-            intercept = 0.0
-        try:
-            slope = dcm.RescaleSlope
-        except AttributeError:
-            slope = 0.0
-
-        if intercept != 0.0 and slope != 0.0:
-            dcm_image = dcm_image*slope + intercept
-        dcm_dict = {'pixel_data' : dcm_image}
-        return dcm_dict
-    except InvalidDicomError:
-        return None
-
-
 def poly_to_mask(polygon, width, height):
     """Convert polygon to mask
 
