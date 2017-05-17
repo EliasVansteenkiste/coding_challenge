@@ -7,9 +7,12 @@ After reading the solution on stackoverflow, I saw the following comment:
 http://stackoverflow.com/questions/3654289/scipy-create-2d-polygon-mask#comment59125132_3732128
 The solution used in the original poly_to_mask function only works with integer coordinate (i.e. grid coordinates)
 
-![Alt text](problem_cases/closeup_pm_SC-HF-I-2_SCD0000201_127_old.jpg?raw=true "Old mask SC-HF-I-2 0127"){:height="50%" width="50%"} ![Alt text](problem_cases/closeup_pm_SC-HF-I-2_SCD0000201_127_new.jpg?raw=true "New mask SC-HF-I-2 0127"){:height="50%" width="50%"}
 
-![Alt text](problem_cases/closeup_pm_SC-HF-I-2_SCD0000201_187_old.jpg?raw=true "Old mask SC-HF-I-2 0187") ![Alt text](problem_cases/closeup_pm_SC-HF-I-2_SCD0000201_187_new.jpg?raw=true "New mask SC-HF-I-2 0187")
+
+<img src="problem_cases/closeup_pm_SC-HF-I-2_SCD0000201_127_old.jpg?raw=true" width="200">Old mask SC-HF-I-2 0127</img> <img src="problem_cases/closeup_pm_SC-HF-I-2_SCD0000201_127_new.jpg?raw=true" width="200">New mask SC-HF-I-2 0127</img>
+
+<img src="problem_cases/closeup_pm_SC-HF-I-2_SCD0000201_187_old.jpg?raw=true" width="200">Old mask SC-HF-I-2 0187</img> <img src="problem_cases/closeup_pm_SC-HF-I-2_SCD0000201_187_new.jpg?raw=true" width="200">New mask SC-HF-I-2 0187</img>
+
 
 ### What changes did you make to the code, if any, in order to integrate it into our production code base? 
 I used the skimage.draw.polygon function, which behaves much nicer with floating point vertices as can be seen in the few examples that I included in the problem_cases folder.
