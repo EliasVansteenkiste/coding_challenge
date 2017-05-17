@@ -9,9 +9,9 @@ The solution used in the original poly_to_mask function only works with integer 
 
 
 
-<img src="problem_cases/closeup_pm_SC-HF-I-2_SCD0000201_127_old.jpg?raw=true" title="Old mask SC-HF-I-2 0127" width="450"><img src="problem_cases/closeup_pm_SC-HF-I-2_SCD0000201_127_new.jpg?raw=true" title="New mask SC-HF-I-2 0127" width="450">
+<img src="problem_cases/closeup_pm_SC-HF-I-2_SCD0000201_127_old.jpg?raw=true" title="Old mask SC-HF-I-2 0127" width="400"><img src="problem_cases/closeup_pm_SC-HF-I-2_SCD0000201_127_new.jpg?raw=true" title="New mask SC-HF-I-2 0127" width="400">
 
-<img src="problem_cases/closeup_pm_SC-HF-I-2_SCD0000201_187_old.jpg?raw=true" title="Old mask SC-HF-I-2 0187" width="450"> <img src="problem_cases/closeup_pm_SC-HF-I-2_SCD0000201_187_new.jpg?raw=true" title="New mask SC-HF-I-2 0187" width="450">
+<img src="problem_cases/closeup_pm_SC-HF-I-2_SCD0000201_187_old.jpg?raw=true" title="Old mask SC-HF-I-2 0187" width="400"> <img src="problem_cases/closeup_pm_SC-HF-I-2_SCD0000201_187_new.jpg?raw=true" title="New mask SC-HF-I-2 0187" width="400">
 
 
 ### What changes did you make to the code, if any, in order to integrate it into our production code base? 
