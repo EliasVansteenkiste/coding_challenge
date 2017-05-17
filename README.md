@@ -1,3 +1,16 @@
+# General overview of the source files
+The most important files are:
+* *contour.py* contains functions to read in the ground truth contours and transform the contours to masks
+* *scan.py* contains methods to read DICOM scans
+* *data_iterator.py* contains the data generator class
+
+supporting source files:
+* *pathfinder.py* checks if all paths and files to the data exist
+* *utils_plots.py* contains plot functions to do the visual checks
+* *app.py* contains methods to read in link file and create dictionaries for both ways
+* *utils.py* contains some convenience methods, this is copied from another project, some of the methods I don't use for this challenge
+
+
 # Questions Part 1
 ### How did you verify that you are parsing the contours correctly?
 I did a visual check on the masks and the contours.
@@ -29,6 +42,8 @@ I tested the data iterator, by letting it run through all the samples and I veri
 I also did a visual check on the masks and the contours if they fit together.
 
 ### Given the pipeline you have built, can you see any deficiencies that you would change if you had more time? If not, can you think of any improvements/enhancements to the pipeline that you could build in?
-I would have to profile the pipeline for where it consumes to much runtime, but that only matters if reading the data is a bottleneck. It could as well be the computations on the GPU.
-I would interpolate each scan to the same pixel spacing. I made some provisions to be able to add this easily in the data_prep_fun. Now I only have five patient scans and four of them have the same x,y pixel spacings, so the straightforward thing to do is to transform the one special case to most occuring pixel spacing. However, typically there are going to be more diverse pixel spacings and it could be easier to just transform everything to 1mmx1mm. It depends on the distribution in the whole dataset.
+I would have to profile the pipeline for where it consumes most of the runtime, but that only matters if reading the data is a bottleneck. It could as well be the computations on the GPU.
+
+I would interpolate each scan to the same pixel spacing. I made some provisions to be able to add this easily in the data_prep_fun. Now I only have five patient scans and four of them have the same x,y pixel spacings, so the straightforward thing to do is to transform the one special case to most occuring pixel spacing. However, typically there are going to be more diverse pixel spacings and it could be easier to just transform everything to 1mmx1mm. It depends on the distribution in the whole dataset, so maybe in phase 2, I will know what to do.
+
 If I had more time, I would also add more safeguards and assertions.
