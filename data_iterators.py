@@ -82,7 +82,7 @@ def _test_data_generator():
     rng = np.random.RandomState(42)
 
     def data_prep_fun(x):
-        #here you can do normalization, a crop, ...
+        #here you can do normalization, a crop, interpolate everything to one mm pixel spacing, ...
         return x
 
     def mask_prep_fun(y):

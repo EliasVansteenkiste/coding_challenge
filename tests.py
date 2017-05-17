@@ -55,6 +55,6 @@ def generate_polygon_mask_plot(icp):
 
 if __name__ == "__main__":
     #generating plot at high resolution for a problem case
-    generate_polygon_mask_plot(pathfinder.CONTOURS_PATH+'/'+'SC-HF-I-2/i-contours/IM-0001-0127-icontour-manual.txt')
+    #generate_polygon_mask_plot(pathfinder.CONTOURS_PATH+'/'+'SC-HF-I-2/i-contours/IM-0001-0127-icontour-manual.txt')
     #generate_polygon_mask_plot(pathfinder.CONTOURS_PATH+'/'+'SC-HF-I-2/i-contours/IM-0001-0187-icontour-manual.txt')
-
+    generate_border_plots()
