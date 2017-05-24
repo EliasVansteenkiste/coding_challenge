@@ -98,10 +98,8 @@ Despite of the conclusion based on the histograms, I tried a threshold value of 
 For each slice I plot the masked scan on the left, the histogram in the center and the resulting mask on the right.
 
 Good samples (with some minor issues)
-<img src="examples/hist_masked_sc_SC-HF-I-5_SCD0000401_200.jpg?raw=true" title="SC-HF-I-5_SCD0000401_200" width="350"> <img src="examples/hist_masked_sc_SC-HF-I-5_SCD0000401_140.jpg?raw=true" title="SC-HF-I-5_SCD0000401_140" width="350">
 
-<img src="examples/hist_masked_sc_SC-HF-I-4_SCD0000301_120.jpg?raw=true" title="SC-HF-I-4_SCD0000301_120" width="350"> <img src="examples/hist_masked_sc_SC-HF-I-4_SCD0000301_100.jpg?raw=true" title="SC-HF-I-4_SCD0000301_100" width="350">
-
+<img src="examples/hist_masked_sc_SC-HF-I-5_SCD0000401_140.jpg?raw=true" title="SC-HF-I-5_SCD0000401_140" width="350"> <img src="examples/hist_masked_sc_SC-HF-I-4_SCD0000301_120.jpg?raw=true" title="SC-HF-I-4_SCD0000301_120" width="350"> 
 
 Bad samples with different issues:
 
@@ -113,7 +111,7 @@ Bad samples with different issues:
 
 <img src="examples/hist_masked_sc_SC-HF-I-4_SCD0000301_80.jpg?raw=true" title="SC-HF-I-4_SCD0000301_80" width="350"> <img src="examples/hist_masked_sc_SC-HF-I-2_SCD0000201_100.jpg?raw=true" title="SC-HF-I-2_SCD0000201_100" width="350">
 
-3. Treshold is completely off
+3. The static treshold of 150 is completely off
 
 <img src="examples/hist_masked_sc_SC-HF-I-5_SCD0000401_100.jpg?raw=true" title="SC-HF-I-5_SCD0000401_100" width="350"> <img src="examples/hist_masked_sc_SC-HF-I-1_SCD0000101_159.jpg?raw=true" title="SC-HF-I-1_SCD0000101_159" width="350">
 
