@@ -80,27 +80,30 @@ Here are a few examples:
 
 
 Others seemed fine, but there were some minor issues.
-To investigate this I made a method, **generate_masked_scan_plots**, to plot a closeup of the masked scan.
+To investigate this I made a method, **generate_masked_scan_plots**, to plot a closeup of the masked scan. The masks are made from the o-contours.
 
 <img src="examples/suspicious_masked_scan_SC-HF-I-5_SCD0000401_40.jpg?raw=true" title="SC-HF-I-5_SCD0000401_40" width="200"> <img src="examples/suscpicious_masked_scan_SC-HF-I-1_SCD0000101_59.jpg?raw=true" title="SC-HF-I-1_SCD0000101_59" width="200"> <img src="examples/suspicious_masked_scan_SC-HF-I-5_SCD0000401_200.jpg?raw=true" title="SC-HF-I-5_SCD0000401_200" width="200">
+
+In the left and center plot you can see the contours suddenly cut off a piece of the ventricle, this leads to a part of the border not be in the mask.
+In the center and right plot you can also see that ocontour is not precisely fit to the outside border of the ventricle.
 
 
 ## Part 2: Heuristic LV Segmentation approaches
 ### Let’s assume that you want to create a system to outline the boundary of the blood pool (i-contours), and you already know the outer border of the heart muscle (o-contours). Compare the differences in pixel intensities inside the blood pool (inside the i-contour) to those inside the heart muscle (between the i-contours and o-contours); could you use a simple thresholding scheme to automatically create the i-contours, given the o-contours? Why or why not? Show figures that help justify your answer.
 
-We could use morphological operations to make sure the tendinous chords), and you already know the outer border of the heart muscle (o-contours). Compare the differences in pixel intensities inside the blood pool (inside the i-contour) to those inside the heart muscle (between the i-contours and o-contours); could you use a simple thresholding scheme to automatically create the i-contours, given the o-contours? Why or why not? Show figures that help justify your answer.
-
 Simple tresholding is not really a solution here.
-If we take a look at the histograms of the pixels inside the o-contours, then we see that they change significantly. Some masked slices have pixel values ranging from 0-500 (eg. hist_masked_sc_SC-HF-I-1_SCD0000101_99) and other slices (e.g. hist_masked_sc_SC-HF-I-4_SCD0000301_20) have pixel values between 0-200. I looked at the metadata of the DICOM files and there was no 'rescale slope' and 'intercept' tags, so that was not the issue. I also looked at the other metadata tags, but I could not find anything suspicious.
+If we take a look at the histograms of the pixels inside the o-contours, then we see that they change significantly. Some masked slices have pixel values ranging from 0-500 (eg. SC-HF-I-1_SCD0000101_99) and other slices (e.g. SC-HF-I-4_SCD0000301_20) have pixel values between 0-200. I looked at the metadata of the DICOM files and there was no 'rescale slope' and 'intercept' tags, so that was not the issue. I also looked at the other metadata tags, but I could not find anything suspicious.
 
 Despite of the conclusion based on the histograms, I tried a threshold value of 150 for all the scans based on the histograms, but then you can observe in the following plots that it works for some scans but not for all.
 
-<img src="examples/SC-HF-I-6_SCD0000501_68.jpg?raw=true" title="SC-HF-I-6_SCD0000501_68" width="350"> <img src="examples/SC-HF-I-6_SCD0000501_67.jpg?raw=true" title="SC-HF-I-6_SCD0000501_67" width="350">
+<img src="examples/hist_masked_sc_SC-HF-I-5_SCD0000401_200.jpg?raw=true" title="SC-HF-I-5_SCD0000401_200" width="350"> <img src="examples/hist_masked_sc_SC-HF-I-5_SCD0000401_140.jpg?raw=true" title="SC-HF-I-5_SCD0000401_140" width="350">
 
-<img src="examples/SC-HF-I-6_SCD0000501_80.jpg?raw=true" title="SC-HF-I-6_SCD0000501_80" width="350"> <img src="examples/SC-HF-I-6_SCD0000501_20.jpg?raw=true" title="SC-HF-I-6_SCD0000501_20" width="350">
+<img src="examples/hist_masked_sc_SC-HF-I-4_SCD0000301_120.jpg?raw=true" title="SC-HF-I-4_SCD0000301_120" width="350"> <img src="examples/hist_masked_sc_SC-HF-I-4_SCD0000301_100.jpg?raw=true" title="SC-HF-I-4_SCD0000301_100" width="350">
+
+<img src="examples/hist_masked_sc_SC-HF-I-1_SCD0000101_79.jpg?raw=true" title="SC-HF-I-1_SCD0000101_79" width="350"> <img src="examples/hist_masked_sc_SC-HF-I-1_SCD0000101_59.jpg?raw=true" title="SC-HF-I-1_SCD0000101_59" width="350">
 
 
-We could try to change the treshold for each slice seperately. The treshold could be based on the histogram of the pixel values inside the ocontour. There are typically  two distinct groups of pixel values, the pixels representing the contents of the blood vessel and the pixels representing the border of the blood vessel.
+We could try to change the treshold for each slice seperately. The treshold could be based on the histogram of the pixel values inside the ocontour. There are typically  two distinct groups of pixel values, the pixels representing the contents of the ventricle and the pixels representing the border of the ventricle.
 
 Another issue we can't solve with simple tresholding is the occurence of the tendinous chords in the ventricle. As show in the following plot:
 
@@ -114,5 +117,6 @@ Another option could be to use only morphological operations and no tresholding.
 
 
 
+We could use morphological operations to make sure the tendinous chords), and you already know the outer border of the heart muscle (o-contours). Compare the differences in pixel intensities inside the blood pool (inside the i-contour) to those inside the heart muscle (between the i-contours and o-contours); could you use a simple thresholding scheme to automatically create the i-contours, given the o-contours? Why or why not? Show figures that help justify your answer.
 
 
