@@ -106,12 +106,15 @@ Good samples (with some minor issues)
 Bad samples with different issues:
 
 1. The ocontour does not fit well for these two examples, as mentioned in the previous section.
+
 <img src="examples/hist_masked_sc_SC-HF-I-1_SCD0000101_79.jpg?raw=true" title="SC-HF-I-1_SCD0000101_79" width="350"> <img src="examples/hist_masked_sc_SC-HF-I-1_SCD0000101_59.jpg?raw=true" title="SC-HF-I-1_SCD0000101_59" width="350">
 
 2. The tendinous chords in the ventricle show up in our mask.
+
 <img src="examples/hist_masked_sc_SC-HF-I-4_SCD0000301_80.jpg?raw=true" title="SC-HF-I-4_SCD0000301_80" width="350"> <img src="examples/hist_masked_sc_SC-HF-I-2_SCD0000201_100.jpg?raw=true" title="SC-HF-I-2_SCD0000201_100" width="350">
 
 3. Treshold is completely off
+
 <img src="examples/hist_masked_sc_SC-HF-I-5_SCD0000401_100.jpg?raw=true" title="SC-HF-I-5_SCD0000401_100" width="350"> <img src="examples/hist_masked_sc_SC-HF-I-1_SCD0000101_159.jpg?raw=true" title="SC-HF-I-1_SCD0000101_159" width="350">
 
 We could try to change the treshold for each slice seperately. The treshold could be based on the histogram of the pixel values inside the ocontour. There are typically  two distinct groups of pixel values, as can be seen in the histograms. The first group is the pixels representing the contents of the ventricle and the other is the pixels representing the border of the ventricle.
