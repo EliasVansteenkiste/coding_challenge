@@ -95,28 +95,37 @@ Simple tresholding is not really a solution here.
 If we take a look at the histograms of the pixels inside the o-contours, then we see that they change significantly. Some masked slices have pixel values ranging from 0-500 (eg. SC-HF-I-1_SCD0000101_99) and other slices (e.g. SC-HF-I-4_SCD0000301_20) have pixel values between 0-200. I looked at the metadata of the DICOM files and there was no 'rescale slope' and 'intercept' tags, so that was not the issue. I also looked at the other metadata tags, but I could not find anything suspicious.
 
 Despite of the conclusion based on the histograms, I tried a threshold value of 150 for all the scans based on the histograms, but then you can observe in the following plots that it works for some scans but not for all.
+For each slice I plot the masked scan on the left, the histogram in the center and the resulting mask on the right.
 
+Good samples (with some minor issues)
 <img src="examples/hist_masked_sc_SC-HF-I-5_SCD0000401_200.jpg?raw=true" title="SC-HF-I-5_SCD0000401_200" width="350"> <img src="examples/hist_masked_sc_SC-HF-I-5_SCD0000401_140.jpg?raw=true" title="SC-HF-I-5_SCD0000401_140" width="350">
 
 <img src="examples/hist_masked_sc_SC-HF-I-4_SCD0000301_120.jpg?raw=true" title="SC-HF-I-4_SCD0000301_120" width="350"> <img src="examples/hist_masked_sc_SC-HF-I-4_SCD0000301_100.jpg?raw=true" title="SC-HF-I-4_SCD0000301_100" width="350">
 
+
+
+Bad samples with different issues:
+
+1. The ocontour does not fit well for these two examples, as mentioned in the previous section.
 <img src="examples/hist_masked_sc_SC-HF-I-1_SCD0000101_79.jpg?raw=true" title="SC-HF-I-1_SCD0000101_79" width="350"> <img src="examples/hist_masked_sc_SC-HF-I-1_SCD0000101_59.jpg?raw=true" title="SC-HF-I-1_SCD0000101_59" width="350">
 
+2. The tendinous chords in the ventricle show up in our mask.
+<img src="examples/hist_masked_sc_SC-HF-I-3_SCD0000301_80.jpg?raw=true" title="SC-HF-I-3_SCD0000301_80" width="350"> <img src="examples/hist_masked_sc_SC-HF-I-2_SCD0000201_100.jpg?raw=true" title="SC-HF-I-2_SCD0000201_100" width="350">
 
-We could try to change the treshold for each slice seperately. The treshold could be based on the histogram of the pixel values inside the ocontour. There are typically  two distinct groups of pixel values, the pixels representing the contents of the ventricle and the pixels representing the border of the ventricle.
-
-Another issue we can't solve with simple tresholding is the occurence of the tendinous chords in the ventricle. As show in the following plot:
-
-###Do you think that any other heuristic (non-machine learning)-based approaches, besides simple thresholding, would work in this case? Explain.
-
-We could use the morphological operations erosion and dilation to improve an tresholding approach. It could clean up  to make sure the tendinous chords are emerged in the mask.
-
-but in my opinion this heuristic approach takes a lot of time but if you select the good examples and then train a segmentation network model on it, it can generalize every well even if there are still small mistakes in the ground truth masks.
-
-Another option could be to use only morphological operations and no tresholding. The idea would be to erode the border away from a masked 
+3. Treshold is completely off
+<img src="examples/hist_masked_sc_SC-HF-I-5_SCD0000401_100.jpg?raw=true" title="SC-HF-I-5_SCD0000401_100" width="350"> <img src="examples/hist_masked_sc_SC-HF-I-1_SCD0000101_159.jpg?raw=true" title="SC-HF-I-1_SCD0000101_159" width="350">
 
 
+We could try to change the treshold for each slice seperately. The treshold could be based on the histogram of the pixel values inside the ocontour. There are typically  two distinct groups of pixel values, as can be seen in the histograms. The first group is the pixels representing the contents of the ventricle and the other is the pixels representing the border of the ventricle.
 
-We could use morphological operations to make sure the tendinous chords), and you already know the outer border of the heart muscle (o-contours). Compare the differences in pixel intensities inside the blood pool (inside the i-contour) to those inside the heart muscle (between the i-contours and o-contours); could you use a simple thresholding scheme to automatically create the i-contours, given the o-contours? Why or why not? Show figures that help justify your answer.
+Dynamic tresholding will not solve the third issue which is the occurence of the tendinous chords in the mask. 
+
+### Do you think that any other heuristic (non-machine learning)-based approaches, besides simple thresholding, would work in this case? Explain.
+
+We could use the morphological operations erosion and dilation to improve an tresholding approach. It could connect areas during dilation and to make sure the tendinous chords are emerged in the mask. Once emerged we could delete the tendons by labeling the regions inside the mask.
+However in my opinion this heuristic approach takes a lot of time and tuning.
+
+Another idea is to start from the o-contour based mask and erode the border away from the mask. We could repeatedly do small disk erosions and check if the included border pixels have different pixel values. The treshold is again a parameter that is hard to tune.
+Another limitation of this method is that it assumes that the thickness of the border of the ventricle is equal in all the areas.
 
 
