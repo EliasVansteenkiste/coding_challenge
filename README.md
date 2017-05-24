@@ -64,9 +64,16 @@ If I had more time, I would also add more safeguards and assertions.
 I added a method **get_list_available_ocontours** to *contour.py*. It is very similar to the **get_list_available_icontours**. It just returns the list of available o-contours. This list can be used to check which o-contours are available.
 
 I made a new data iterator and I choose to output both the i-contour and o-contour.
-I checked the generated o-contours with by **plot_border_on_slice** method and I found some problems.
-One patient, **SC-HF-I-6_SCD0000501**,  was dramatic. All the o-contours were off.
-Examples you can see in the following plots:
+I checked the generated o-contours with by **generate_ocontours_icontours_border_plots** method and I found some problems.
+
+I start with two good examples:
+<img src="examples/contour_plot_good_SC-HF-I-4_SCD0000301_180.jpg?raw=true" title="SC-HF-I-4_SCD0000301_180" width="350"> <img src="examples/contour_plot_good_SC-HF-I-2_SCD0000201_80.jpg?raw=true" title="SC-HF-I-2_SCD0000201_80" width="350">
+
+ 
+One patient, **SC-HF-I-6_SCD0000501**,  was dramatic. All the o-contours of this patient were off.
+Here are a few examples:
+<img src="examples/contour_plot_bad_SC-HF-I-6_SCD0000501_199.jpg?raw=true" title="SC-HF-I-6_SCD0000501_199" width="350"> <img src="examples/contour_plot_bad_SC-HF-I-6_SCD0000501_59.jpg?raw=true" title="SC-HF-I-6_SCD0000501_59" width="350">
+
 
 <img src="examples/SC-HF-I-6_SCD0000501_68.jpg?raw=true" title="SC-HF-I-6_SCD0000501_68" width="350"> <img src="examples/SC-HF-I-6_SCD0000501_67.jpg?raw=true" title="SC-HF-I-6_SCD0000501_67" width="350">
 
@@ -81,9 +88,9 @@ Others seemed fine, but there were some minor issues like in the following plots
 We could use morphological operations to make sure the tendinous chords), and you already know the outer border of the heart muscle (o-contours). Compare the differences in pixel intensities inside the blood pool (inside the i-contour) to those inside the heart muscle (between the i-contours and o-contours); could you use a simple thresholding scheme to automatically create the i-contours, given the o-contours? Why or why not? Show figures that help justify your answer.
 
 Simple tresholding is not really a solution here.
-If we take a look at the histograms of the pixels inside the o-contours, then we see that they change significantly. Some masked slices have pixel values ranging from 0-500 (eg. hist_masked_sc_SC-HF-I-1_SCD0000101_99) and other slices (e.g. hist_masked_sc_SC-HF-I-4_SCD0000301_20) have pixel values between 0-200. I looked at the metadata of the DICOM files and there was no rescale slope and intercept tags, so that was not the issue.
+If we take a look at the histograms of the pixels inside the o-contours, then we see that they change significantly. Some masked slices have pixel values ranging from 0-500 (eg. hist_masked_sc_SC-HF-I-1_SCD0000101_99) and other slices (e.g. hist_masked_sc_SC-HF-I-4_SCD0000301_20) have pixel values between 0-200. I looked at the metadata of the DICOM files and there was no 'rescale slope' and 'intercept' tags, so that was not the issue. I also looked at the other metadata tags, but I could not find anything suspicious.
 
-Despite of the conclusion based on the histograms, I tried a threshold value of 150 for all the scans based on the histograms, but then you can observe in the following plots that it doesn't work for all scans.
+Despite of the conclusion based on the histograms, I tried a threshold value of 150 for all the scans based on the histograms, but then you can observe in the following plots that it works for some scans but not for all.
 
 <img src="examples/SC-HF-I-6_SCD0000501_68.jpg?raw=true" title="SC-HF-I-6_SCD0000501_68" width="350"> <img src="examples/SC-HF-I-6_SCD0000501_67.jpg?raw=true" title="SC-HF-I-6_SCD0000501_67" width="350">
 
