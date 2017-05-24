@@ -105,6 +105,28 @@ def get_list_available_icontours():
             icountours.append(path + '/' + filename)
     return icountours
 
+def get_list_available_ocontours():
+    """Check all available o-contours
+
+    :return: a list of paths to all the o-contours
+    """
+    ocountours = []
+    pid2oid = app.read_pid2oid(pathfinder.LINK_PATH)
+    for key,value in pid2oid.iteritems():
+        path = pathfinder.CONTOURS_PATH+'/'+value+'/o-contours'
+        for filename in os.listdir(path):
+            ocountours.append(path + '/' + filename)
+    return ocountours
+
+
+def get_icontour_path(ocountour_path):
+    folders = ocountour_path.split('/')
+    oc_filename = folders[-1]
+    ic_filename = oc_filename.replace('ocontour','icontour')
+    main_dir = '/'.join(folders[:-2])
+    icontour_path = main_dir + '/i-contours/'+ic_filename
+    return icontour_path
+
 def get_slice_id(icontour_path):
     filename = icontour_path.split('/')[-1]
     slice_id = int(filename.split('-')[2])
