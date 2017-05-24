@@ -183,7 +183,7 @@ def _test_icontour_data_generator():
         print x_chunk.shape, y_chunk.shape, id_train
 
 
-def _test_ocontour_data_generator():
+def _test_o_i_contour_data_generator():
     #testing the data iterator 
 
     # p_transform can be used to pass various info to the data iterator
@@ -213,6 +213,6 @@ def _test_ocontour_data_generator():
 
 
 if __name__ == "__main__":
-    _test_ocontour_data_generator()
+    _test_o_i_contour_data_generator()
 
 
