@@ -67,23 +67,26 @@ I made a new data iterator and I choose to output both the i-contour and o-conto
 I checked the generated o-contours with by **generate_ocontours_icontours_border_plots** method and I found some problems.
 
 I start with two good examples:
+
 <img src="examples/contour_plot_good_SC-HF-I-4_SCD0000301_180.jpg?raw=true" title="SC-HF-I-4_SCD0000301_180" width="350"> <img src="examples/contour_plot_good_SC-HF-I-2_SCD0000201_80.jpg?raw=true" title="SC-HF-I-2_SCD0000201_80" width="350">
 
  
-One patient, **SC-HF-I-6_SCD0000501**,  was dramatic. All the o-contours of this patient were off.
+One patient, **SC-HF-I-6_SCD0000501**, was dramatic. 
+All the o-contours of this patient were off.
+
 Here are a few examples:
+
 <img src="examples/contour_plot_bad_SC-HF-I-6_SCD0000501_199.jpg?raw=true" title="SC-HF-I-6_SCD0000501_199" width="350"> <img src="examples/contour_plot_bad_SC-HF-I-6_SCD0000501_59.jpg?raw=true" title="SC-HF-I-6_SCD0000501_59" width="350">
 
 
-<img src="examples/SC-HF-I-6_SCD0000501_68.jpg?raw=true" title="SC-HF-I-6_SCD0000501_68" width="350"> <img src="examples/SC-HF-I-6_SCD0000501_67.jpg?raw=true" title="SC-HF-I-6_SCD0000501_67" width="350">
+Others seemed fine, but there were some minor issues.
+To investigate this I made a method, **generate_masked_scan_plots**, to plot a closeup of the masked scan.
 
-<img src="examples/SC-HF-I-6_SCD0000501_80.jpg?raw=true" title="SC-HF-I-6_SCD0000501_80" width="350"> <img src="examples/SC-HF-I-6_SCD0000501_20.jpg?raw=true" title="SC-HF-I-6_SCD0000501_20" width="350">
-
-Others seemed fine, but there were some minor issues like in the following plots:
+<img src="examples/suspicious_masked_scan_SC-HF-I-5_SCD0000401_40.jpg?raw=true" title="SC-HF-I-5_SCD0000401_40" width="200"> <img src="examples/suscpicious_masked_scan_SC-HF-I-1_SCD0000101_59.jpg?raw=true" title="SC-HF-I-1_SCD0000101_59" width="200"> <img src="examples/suspicious_masked_scan_SC-HF-I-5_SCD0000401_200.jpg?raw=true" title="SC-HF-I-5_SCD0000401_200" width="200">
 
 
 ## Part 2: Heuristic LV Segmentation approaches
-### Let’s assume that you want to create a system to outline the boundary of the blood pool (i-contours###Do you think that any other heuristic (non-machine learning)-based approaches, besides simple thresholding, would work in this case? Explain.
+### Let’s assume that you want to create a system to outline the boundary of the blood pool (i-contours), and you already know the outer border of the heart muscle (o-contours). Compare the differences in pixel intensities inside the blood pool (inside the i-contour) to those inside the heart muscle (between the i-contours and o-contours); could you use a simple thresholding scheme to automatically create the i-contours, given the o-contours? Why or why not? Show figures that help justify your answer.
 
 We could use morphological operations to make sure the tendinous chords), and you already know the outer border of the heart muscle (o-contours). Compare the differences in pixel intensities inside the blood pool (inside the i-contour) to those inside the heart muscle (between the i-contours and o-contours); could you use a simple thresholding scheme to automatically create the i-contours, given the o-contours? Why or why not? Show figures that help justify your answer.
 
@@ -105,7 +108,9 @@ Another issue we can't solve with simple tresholding is the occurence of the ten
 
 We could use the morphological operations erosion and dilation to improve an tresholding approach. It could clean up  to make sure the tendinous chords are emerged in the mask.
 
-but in my opinion this heuristic approach takes a lot of time but if you select the good examples and then train a segmentation model on it, it can generalize every well even if there are still small mistakes in the ground truth masks.
+but in my opinion this heuristic approach takes a lot of time but if you select the good examples and then train a segmentation network model on it, it can generalize every well even if there are still small mistakes in the ground truth masks.
+
+Another option could be to use only morphological operations and no tresholding. The idea would be to erode the border away from a masked 
 
 
 
