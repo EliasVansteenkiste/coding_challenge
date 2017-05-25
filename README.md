@@ -95,7 +95,7 @@ Simple tresholding is not really a solution here.
 If we take a look at the histograms of the pixels inside the o-contours, then we see that they change significantly. Some masked slices have pixel values ranging from 0-500 (eg. SC-HF-I-1_SCD0000101_99) and other slices (e.g. SC-HF-I-4_SCD0000301_20) have pixel values between 0-200. I looked at the metadata of the DICOM files and there was no 'rescale slope' and 'intercept' tags, so that was not the issue. I also looked at the other metadata tags, but I could not find anything suspicious.
 
 Despite of the conclusion based on the histograms, I tried a threshold value of 150 for all the scans based on the histograms, but then you can observe in the following plots that it works for some scans but not for all.
-For each slice I plot the masked scan on the left, the histogram in the center and the resulting mask on the right.
+For each slice I plot the masked scan on the left, the histogram in the center and the resulting mask on the right. To make these plots, I used the **generate_histograms_masked_scan** in *tests.py*
 
 Good samples (with some minor issues)
 
@@ -122,12 +122,12 @@ Dynamic tresholding will not solve the third issue which is the occurence of the
 
 ### Do you think that any other heuristic (non-machine learning)-based approaches, besides simple thresholding, would work in this case? Explain.
 
-We could use the morphological operations erosion and dilation to improve an tresholding approach. It could connect areas during dilation and to make sure the tendinous chords are emerged in the mask. Once emerged we could delete the tendons by labeling the regions inside the mask.
+We could use the morphological operations erosion and dilation to improve the tresholding approach. It could connect areas during dilation and to make sure the tendinous chords are emerged in the mask. Once emerged we could delete the tendons by labeling the regions inside the mask.
 However in my opinion this heuristic approach takes a lot of time and tuning.
 
-Another idea is to start from the o-contour based mask and erode the border away from the mask. We could repeatedly do small disk erosions and check if the included border pixels have different pixel values. The treshold is again a parameter that is hard to tune.
+Another idea is to start from the o-contour based mask and erode the border away from the mask. We could repeatedly do small disk erosions and check if the included border pixels have significantly different pixel values. The treshold for significance is again a parameter that is hard to tune.
 Another limitation of this method is that it assumes that the thickness of the border of the ventricle is equal in all the areas.
 
-If we are able to achieve some basic quality level contours with some heuristic method, it is always advantageous to train a segmentation network, because it is typically better at generalizing. Segmentation networks typically neglect small problems like issue nr. 1 which is that some o-contours not completely fit the border of the ventricle. 
+If we are able to achieve some basic quality level contours with some heuristic method, it is always advantageous to train a segmentation network, because it is typically better at generalizing. Segmentation networks typically neglect small problems like issue nr. 1 (o-contours not completely fit the border of the ventricle). 
 
 
