@@ -99,7 +99,8 @@ For each slice I plot the masked scan on the left, the histogram in the center a
 
 Good samples (with some minor issues)
 
-<img src="examples/hist_masked_sc_SC-HF-I-5_SCD0000401_140.jpg?raw=true" title="SC-HF-I-5_SCD0000401_140" width="350"> <img src="examples/hist_masked_sc_SC-HF-I-4_SCD0000301_120.jpg?raw=true" title="SC-HF-I-4_SCD0000301_120" width="350"> 
+<img src="examples/hist_masked_sc_SC-HF-I-5_SCD0000401_200.jpg?raw=true" title="SC-HF-I-5_SCD0000401_200" width="350"> <img src="examples/hist_masked_sc_SC-HF-I-4_SCD0000301_120.jpg?raw=true" title="SC-HF-I-4_SCD0000301_120" width="350"> 
+
 
 Bad samples with different issues:
 
