@@ -95,7 +95,7 @@ Simple tresholding is not really a solution here.
 If we take a look at the histograms of the pixels inside the o-contours, then we see that they change significantly. Some masked slices have pixel values ranging from 0-500 (eg. SC-HF-I-1_SCD0000101_99) and other slices (e.g. SC-HF-I-4_SCD0000301_20) have pixel values between 0-200. I looked at the metadata of the DICOM files and there was no 'rescale slope' and 'intercept' tags, so that was not the issue. I also looked at the other metadata tags, but I could not find anything suspicious.
 
 Despite of the conclusion based on the histograms, I tried a threshold value of 150 for all the scans based on the histograms, but then you can observe in the following plots that it works for some scans but not for all.
-For each slice I plot the masked scan on the left, the histogram in the center and the resulting mask on the right. To make these plots, I used the **generate_histograms_masked_scan** in *tests.py*
+For each slice I plot the masked scan on the left, the histogram in the center and the resulting mask on the right. To make these plots, I implented the **generate_histograms_masked_scan** method in *tests.py*
 
 Good samples (with some minor issues)
 
