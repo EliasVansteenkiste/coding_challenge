@@ -116,7 +116,7 @@ Bad samples with different issues:
 
 <img src="examples/hist_masked_sc_SC-HF-I-5_SCD0000401_100.jpg?raw=true" title="SC-HF-I-5_SCD0000401_100" width="350"> <img src="examples/hist_masked_sc_SC-HF-I-1_SCD0000101_159.jpg?raw=true" title="SC-HF-I-1_SCD0000101_159" width="350">
 
-We could try to change the treshold for each slice seperately. The treshold could be based on the histogram of the pixel values inside the ocontour. There are typically  two distinct groups of pixel values, as can be seen in the histograms. The first group is the pixels representing the contents of the ventricle and the other is the pixels representing the border of the ventricle.
+We could try to change the treshold for each slice seperately. The treshold could be based on the histogram of the pixel values inside the ocontour. There are typically  two distinct groups of pixel values, as can be seen in the histograms. The first group is the pixels representing the border of the ventricle and the second group is the pixels representing the contents of the ventricle.
 
 Dynamic tresholding will not solve the third issue which is the occurence of the tendinous chords in the mask. 
 
@@ -127,5 +127,7 @@ However in my opinion this heuristic approach takes a lot of time and tuning.
 
 Another idea is to start from the o-contour based mask and erode the border away from the mask. We could repeatedly do small disk erosions and check if the included border pixels have different pixel values. The treshold is again a parameter that is hard to tune.
 Another limitation of this method is that it assumes that the thickness of the border of the ventricle is equal in all the areas.
+
+If we are able to achieve some basic quality level contours with some heuristic method, it is always advantageous to train a segmentation network, because it is typically better at generalizing. Segmentation networks typically neglect small problems like issue nr. 1 which is that some o-contours not completely fit the border of the ventricle. 
 
 
